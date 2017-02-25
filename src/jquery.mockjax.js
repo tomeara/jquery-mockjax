@@ -148,8 +148,11 @@
 
 	function prependNamespace(url, namespace) {
 		if (url.substr(0, namespace.length) === namespace) { return url }
-		var namespacedUrl = [namespace, url].join('/');
-		return namespacedUrl.replace(/(\/+)/g, '/');
+		var namespacedUrl = [
+			namespace.replace(/(\/+)$/, ''),
+			url.replace(/^(\/+)/, '')
+		].join('/');
+		return namespacedUrl;
 	}
 
 	// Check the given handler should mock the given request
