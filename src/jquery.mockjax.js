@@ -146,6 +146,12 @@
 		return handler[property] === $.mockjaxSettings[property];
 	}
 
+	function prependNamespace(url, namespace) {
+		if (url.substr(0, namespace.length) === namespace) { return url }
+		var namespacedUrl = [namespace, url].join('/');
+		return namespacedUrl.replace(/(\/+)/g, '/');
+	}
+
 	// Check the given handler should mock the given request
 	function getMockForRequest( handler, requestSettings ) {
 		// If the mock was registered with a function, let the function decide if we
@@ -166,9 +172,7 @@
 			// Apply namespace prefix to the mock handler's url.
 			var namespace = handler.namespace || $.mockjaxSettings.namespace;
 			if (!!namespace) {
-				var namespacedUrl = [namespace, handler.url].join('/');
-				namespacedUrl = namespacedUrl.replace(/(\/+)/g, '/');
-				handler.url = namespacedUrl;
+				handler.url = prependNamespace(handler.url, namespace);
 			}
 
 			// Look for a simple wildcard '*' or a direct URL match
